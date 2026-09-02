@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { Order } from './order';
+import { Order } from './domain/order';
 
 interface CreateOrderInput {
   customerId: string;
@@ -50,7 +50,7 @@ export class OrdersService {
       totalInCents = Math.round(totalInCents * 0.9);
     }
 
-    const order: Order = {
+    const order = new Order({
       id: randomUUID(),
       customerId: input.customerId,
       customerType: input.customerType,
@@ -58,7 +58,7 @@ export class OrdersService {
       totalInCents,
       status: 'PENDING',
       createdAt: new Date(),
-    };
+    });
 
     this.orders.push(order);
 
@@ -82,15 +82,11 @@ export class OrdersService {
   pay(id: string): Order {
     const order = this.findById(id);
 
-    if (order.status === 'PAID') {
-      throw new BadRequestException('Order is already paid');
+    try {
+      order.pay();
+    } catch (error) {
+      throw new BadRequestException((error as Error).message);
     }
-
-    if (order.status === 'CANCELLED') {
-      throw new BadRequestException('Cancelled order cannot be paid');
-    }
-
-    order.status = 'PAID';
 
     return order;
   }
@@ -98,11 +94,11 @@ export class OrdersService {
   cancel(id: string): Order {
     const order = this.findById(id);
 
-    if (order.status === 'PAID') {
-      throw new BadRequestException('Paid order cannot be cancelled');
+    try {
+      order.cancel();
+    } catch (error) {
+      throw new BadRequestException((error as Error).message);
     }
-
-    order.status = 'CANCELLED';
 
     return order;
   }
