@@ -1,9 +1,30 @@
 import { Module } from '@nestjs/common';
+
 import { OrdersController } from './orders.controller';
-import { OrdersService } from './orders.service';
+
+import { CreateOrderUseCase } from './application/use-cases/create-order';
+import { FindOrdersUseCase } from './application/use-cases/find-orders';
+import { FindOrderByIdUseCase } from './application/use-cases/find-order-by-id';
+import { PayOrderUseCase } from './application/use-cases/pay-order';
+import { CancelOrderUseCase } from './application/use-cases/cancel-order';
+
+import { OrderRepository } from './application/ports/order-repository';
+import { InMemoryOrderRepository } from './infrastructure/repositories/in-memory-order.repository';
 
 @Module({
   controllers: [OrdersController],
-  providers: [OrdersService]
+
+  providers: [
+    CreateOrderUseCase,
+    FindOrdersUseCase,
+    FindOrderByIdUseCase,
+    PayOrderUseCase,
+    CancelOrderUseCase,
+
+    {
+      provide: OrderRepository,
+      useClass: InMemoryOrderRepository,
+    },
+  ],
 })
 export class OrdersModule {}

@@ -1,32 +1,43 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { OrdersService } from './orders.service';
+
+import { CreateOrderUseCase } from './application/use-cases/create-order';
+import { FindOrdersUseCase } from './application/use-cases/find-orders';
+import { FindOrderByIdUseCase } from './application/use-cases/find-order-by-id';
+import { PayOrderUseCase } from './application/use-cases/pay-order';
+import { CancelOrderUseCase } from './application/use-cases/cancel-order';
 
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(
+    private readonly createOrderUseCase: CreateOrderUseCase,
+    private readonly findOrdersUseCase: FindOrdersUseCase,
+    private readonly findOrderByIdUseCase: FindOrderByIdUseCase,
+    private readonly payOrderUseCase: PayOrderUseCase,
+    private readonly cancelOrderUseCase: CancelOrderUseCase,
+  ) {}
 
   @Post()
   create(@Body() body: any) {
-    return this.ordersService.create(body);
+    return this.createOrderUseCase.execute(body);
   }
 
   @Get()
   findAll() {
-    return this.ordersService.findAll();
+    return this.findOrdersUseCase.execute();
   }
 
   @Get(':id')
   findById(@Param('id') id: string) {
-    return this.ordersService.findById(id);
+    return this.findOrderByIdUseCase.execute(id);
   }
 
   @Patch(':id/pay')
   pay(@Param('id') id: string) {
-    return this.ordersService.pay(id);
+    return this.payOrderUseCase.execute(id);
   }
 
   @Patch(':id/cancel')
   cancel(@Param('id') id: string) {
-    return this.ordersService.cancel(id);
+    return this.cancelOrderUseCase.execute(id);
   }
 }

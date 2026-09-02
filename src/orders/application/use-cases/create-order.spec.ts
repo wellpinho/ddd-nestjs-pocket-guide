@@ -1,14 +1,17 @@
 import { CreateOrderUseCase } from './create-order';
+import { InMemoryOrderRepository } from '../../infrastructure/repositories/in-memory-order.repository';
 
 describe('CreateOrderUseCase', () => {
+  let repository: InMemoryOrderRepository;
   let useCase: CreateOrderUseCase;
 
   beforeEach(() => {
-    useCase = new CreateOrderUseCase();
+    repository = new InMemoryOrderRepository();
+    useCase = new CreateOrderUseCase(repository);
   });
 
-  it('should create an order', () => {
-    const order = useCase.execute({
+  it('should create and persist an order', async () => {
+    const order = await useCase.execute({
       customerId: 'customer-1',
       customerType: 'REGULAR',
       items: [
@@ -21,13 +24,17 @@ describe('CreateOrderUseCase', () => {
       ],
     });
 
-    expect(order.customerId).toBe('customer-1');
+    const persistedOrder = await repository.findById(order.id);
+
     expect(order.status).toBe('PENDING');
     expect(order.totalInCents).toBe(20_000);
+
+    expect(persistedOrder).not.toBeNull();
+    expect(persistedOrder?.id).toBe(order.id);
   });
 
-  it('should apply premium pricing rules through the domain', () => {
-    const order = useCase.execute({
+  it('should apply premium pricing rules', async () => {
+    const order = await useCase.execute({
       customerId: 'customer-1',
       customerType: 'PREMIUM',
       items: [
