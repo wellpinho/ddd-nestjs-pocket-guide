@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { OrderRepository } from '../ports/order-repository';
 import { Order } from '../../domain/order';
-import { OrderNotFoundError } from 'src/orders/domain/errors';
+import { PaymentGateway } from '../ports/payment-gateway';
+import { OrderNotFoundError } from './../../domain/errors';
 
 @Injectable()
 export class PayOrderUseCase {
-  constructor(private readonly orderRepository: OrderRepository) {}
+  constructor(
+    private readonly orderRepository: OrderRepository,
+    private readonly paymentGateway: PaymentGateway,
+  ) {}
 
   async execute(id: string): Promise<Order> {
     const order = await this.orderRepository.findById(id);
@@ -13,6 +17,11 @@ export class PayOrderUseCase {
     if (!order) {
       throw new OrderNotFoundError();
     }
+
+    await this.paymentGateway.charge({
+      orderId: order.id,
+      amountInCents: order.totalInCents,
+    });
 
     order.pay();
 
