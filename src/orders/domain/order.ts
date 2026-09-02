@@ -1,5 +1,6 @@
 export type OrderStatus = 'PENDING' | 'PAID' | 'CANCELLED';
 import { OrderItem } from './order-item';
+import { PricingPolicy } from './services/pricing-policy';
 
 export interface OrderItemInput {
   productId: string;
@@ -49,13 +50,12 @@ export class Order {
 
     const items = props.items.map((item) => new OrderItem(item));
 
-    let total = items
+    const subtotal = items
       .map((item) => item.getSubtotal())
-      .reduce((total, subtotal) => total.add(subtotal));
+      .reduce((total, itemSubtotal) => total.add(itemSubtotal));
 
-    if (props.customerType === 'PREMIUM' && total.value > 100_000) {
-      total = total.applyPercentageDiscount(10);
-    }
+    const pricingPolicy = new PricingPolicy();
+    const total = pricingPolicy.calculateTotal(subtotal, props.customerType);
 
     this.props = {
       id: props.id,
