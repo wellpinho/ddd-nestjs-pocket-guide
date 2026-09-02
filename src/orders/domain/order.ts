@@ -1,4 +1,5 @@
 export type OrderStatus = 'PENDING' | 'PAID' | 'CANCELLED';
+import { Money } from './value-objects/money';
 
 export interface OrderItem {
   productId: string;
@@ -46,13 +47,12 @@ export class Order {
       }
     }
 
-    let totalInCents = props.items.reduce(
-      (total, item) => total + item.priceInCents * item.quantity,
-      0,
-    );
+    let total = props.items
+      .map((item) => Money.fromCents(item.priceInCents).multiply(item.quantity))
+      .reduce((total, itemTotal) => total.add(itemTotal));
 
-    if (props.customerType === 'PREMIUM' && totalInCents > 100_000) {
-      totalInCents = Math.round(totalInCents * 0.9);
+    if (props.customerType === 'PREMIUM' && total.value > 100_000) {
+      total = total.applyPercentageDiscount(10);
     }
 
     this.props = {
@@ -60,7 +60,7 @@ export class Order {
       customerId: props.customerId,
       customerType: props.customerType,
       items: props.items,
-      totalInCents,
+      totalInCents: total.value,
       status: props.status ?? 'PENDING',
       createdAt: props.createdAt ?? new Date(),
     };
