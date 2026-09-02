@@ -1,4 +1,9 @@
 export type OrderStatus = 'PENDING' | 'PAID' | 'CANCELLED';
+import {
+  OrderAlreadyPaidError,
+  OrderCancelledError,
+  OrderCannotBeCancelledError,
+} from './errors';
 import { OrderItem } from './order-item';
 import { PricingPolicy } from './services/pricing-policy';
 
@@ -98,11 +103,11 @@ export class Order {
 
   pay(): void {
     if (this.props.status === 'PAID') {
-      throw new Error('Order is already paid');
+      throw new OrderAlreadyPaidError();
     }
 
     if (this.props.status === 'CANCELLED') {
-      throw new Error('Cancelled order cannot be paid');
+      throw new OrderCancelledError();
     }
 
     this.props.status = 'PAID';
@@ -110,7 +115,7 @@ export class Order {
 
   cancel(): void {
     if (this.props.status === 'PAID') {
-      throw new Error('Paid order cannot be cancelled');
+      throw new OrderCannotBeCancelledError();
     }
 
     this.props.status = 'CANCELLED';

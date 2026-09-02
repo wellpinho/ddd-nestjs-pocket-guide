@@ -1,12 +1,23 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-
-import { CreateOrderUseCase } from './application/use-cases/create-order';
-import { FindOrdersUseCase } from './application/use-cases/find-orders';
-import { FindOrderByIdUseCase } from './application/use-cases/find-order-by-id';
-import { PayOrderUseCase } from './application/use-cases/pay-order';
-import { CancelOrderUseCase } from './application/use-cases/cancel-order';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseFilters,
+} from '@nestjs/common';
+import { DomainErrorFilter } from './presentation/http/domain-error.filter';
+import {
+  CancelOrderUseCase,
+  CreateOrderUseCase,
+  FindOrderByIdUseCase,
+  FindOrdersUseCase,
+  PayOrderUseCase,
+} from './application/use-cases';
 
 @Controller('orders')
+@UseFilters(DomainErrorFilter)
 export class OrdersController {
   constructor(
     private readonly createOrderUseCase: CreateOrderUseCase,
