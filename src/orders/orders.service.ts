@@ -3,19 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { Order } from './domain/order';
-
-interface CreateOrderInput {
-  customerId: string;
-  customerType: 'REGULAR' | 'PREMIUM';
-  items: {
-    productId: string;
-    name: string;
-    priceInCents: number;
-    quantity: number;
-  }[];
-}
+import {
+  CreateOrderInput,
+  CreateOrderUseCase,
+} from './application/use-cases/create-order';
 
 @Injectable()
 export class OrdersService {
@@ -23,12 +15,9 @@ export class OrdersService {
 
   create(input: CreateOrderInput): Order {
     try {
-      const order = new Order({
-        id: randomUUID(),
-        customerId: input.customerId,
-        customerType: input.customerType,
-        items: input.items,
-      });
+      const useCase = new CreateOrderUseCase();
+
+      const order = useCase.execute(input);
 
       this.orders.push(order);
 
