@@ -1,6 +1,7 @@
 export interface PaymentInput {
   orderId: string;
   amountInCents: number;
+  idempotencyKey: string;
 }
 
 export interface PaymentResult {

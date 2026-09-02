@@ -1,17 +1,28 @@
 import { Injectable } from '@nestjs/common';
+
 import {
   PaymentGateway,
   PaymentInput,
   PaymentResult,
-} from 'src/orders/application/ports/payment-gateway';
+} from './../../../application/ports';
 
 @Injectable()
 export class FakePaymentGateway implements PaymentGateway {
+  private readonly transactions = new Map<string, PaymentResult>();
+
   async charge(input: PaymentInput): Promise<PaymentResult> {
-    return await new Promise((resolve) => {
-      resolve({
-        transactionId: `fake-${input.orderId}`,
-      });
-    });
+    const existing = this.transactions.get(input.idempotencyKey);
+
+    if (existing) {
+      return existing;
+    }
+
+    const result: PaymentResult = {
+      transactionId: `fake-${input.orderId}`,
+    };
+
+    this.transactions.set(input.idempotencyKey, result);
+
+    return result;
   }
 }

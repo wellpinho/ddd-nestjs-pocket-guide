@@ -51,12 +51,11 @@ describe('PayOrderUseCase', () => {
     const result = await useCase.execute(order.id);
 
     expect(result.status).toBe('PAID');
-
     expect(paymentGateway.payments).toHaveLength(1);
-
     expect(paymentGateway.payments[0]).toEqual({
       orderId: 'order-1',
       amountInCents: 20_000,
+      idempotencyKey: 'pay-order:order-1',
     });
   });
 });
