@@ -1,35 +1,37 @@
 import { Module } from '@nestjs/common';
-
 import { OrdersController } from './orders.controller';
-
-import { CreateOrderUseCase } from './application/use-cases/create-order';
-import { FindOrdersUseCase } from './application/use-cases/find-orders';
-import { FindOrderByIdUseCase } from './application/use-cases/find-order-by-id';
-import { PayOrderUseCase } from './application/use-cases/pay-order';
-import { CancelOrderUseCase } from './application/use-cases/cancel-order';
-
-import { OrderRepository } from './application/ports/order-repository';
+import {
+  CancelOrderUseCase,
+  CreateOrderUseCase,
+  FindOrderByIdUseCase,
+  FindOrdersUseCase,
+  PayOrderUseCase,
+  ProcessOutboxUseCase,
+} from './application/use-cases';
+import {
+  EventPublisher,
+  OrderRepository,
+  OutboxRepository,
+  PaymentGateway,
+} from './application/ports';
 import { InMemoryOrderRepository } from './infrastructure/repositories/in-memory-order.repository';
-import { PaymentGateway } from './application/ports/payment-gateway';
-import { FakePaymentGateway } from './infrastructure/repositories/payment/fake-payment.gateway';
+import { FakePaymentGateway } from './infrastructure/payment/fake-payment.gateway';
+import { InMemoryOutboxRepository } from './infrastructure/messaging/in-memory-outbox.repository';
+import { InMemoryEventPublisher } from './infrastructure/messaging/in-memory-event.publisher';
 
 @Module({
   controllers: [OrdersController],
-
   providers: [
     CreateOrderUseCase,
     FindOrdersUseCase,
     FindOrderByIdUseCase,
     PayOrderUseCase,
     CancelOrderUseCase,
-    {
-      provide: PaymentGateway,
-      useClass: FakePaymentGateway,
-    },
-    {
-      provide: OrderRepository,
-      useClass: InMemoryOrderRepository,
-    },
+    ProcessOutboxUseCase,
+    { provide: OrderRepository, useClass: InMemoryOrderRepository },
+    { provide: PaymentGateway, useClass: FakePaymentGateway },
+    { provide: OutboxRepository, useClass: InMemoryOutboxRepository },
+    { provide: EventPublisher, useClass: InMemoryEventPublisher },
   ],
 })
 export class OrdersModule {}

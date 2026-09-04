@@ -1,3 +1,4 @@
+import { DomainValidationError } from './errors';
 import { Money } from './value-objects/money';
 
 interface OrderItemProps {
@@ -14,16 +15,10 @@ export class OrderItem {
   private readonly quantity: number;
 
   constructor(props: OrderItemProps) {
-    if (!props.productId) {
-      throw new Error('Product is required');
-    }
-
-    if (!props.name) {
-      throw new Error('Product name is required');
-    }
-
+    if (!props.productId) throw new DomainValidationError('Product is required');
+    if (!props.name) throw new DomainValidationError('Product name is required');
     if (!Number.isInteger(props.quantity) || props.quantity <= 0) {
-      throw new Error('Quantity must be a positive integer');
+      throw new DomainValidationError('Quantity must be a positive integer');
     }
 
     this.productId = props.productId;
@@ -32,23 +27,9 @@ export class OrderItem {
     this.quantity = props.quantity;
   }
 
-  getProductId(): string {
-    return this.productId;
-  }
-
-  getName(): string {
-    return this.name;
-  }
-
-  getQuantity(): number {
-    return this.quantity;
-  }
-
-  getPriceInCents(): number {
-    return this.price.value;
-  }
-
-  getSubtotal(): Money {
-    return this.price.multiply(this.quantity);
-  }
+  getProductId(): string { return this.productId; }
+  getName(): string { return this.name; }
+  getQuantity(): number { return this.quantity; }
+  getPriceInCents(): number { return this.price.value; }
+  getSubtotal(): Money { return this.price.multiply(this.quantity); }
 }

@@ -1,11 +1,12 @@
+import { DomainValidationError } from '../errors';
+
 export class Money {
   private constructor(private readonly valueInCents: number) {
     if (!Number.isInteger(valueInCents)) {
-      throw new Error('Money must be represented in cents');
+      throw new DomainValidationError('Money must be represented in cents');
     }
-
     if (valueInCents <= 0) {
-      throw new Error('Money must be greater than zero');
+      throw new DomainValidationError('Money must be greater than zero');
     }
   }
 
@@ -13,15 +14,12 @@ export class Money {
     return new Money(valueInCents);
   }
 
-  get value(): number {
-    return this.valueInCents;
-  }
+  get value(): number { return this.valueInCents; }
 
   multiply(quantity: number): Money {
     if (!Number.isInteger(quantity) || quantity <= 0) {
-      throw new Error('Quantity must be a positive integer');
+      throw new DomainValidationError('Quantity must be a positive integer');
     }
-
     return Money.fromCents(this.valueInCents * quantity);
   }
 
@@ -30,14 +28,13 @@ export class Money {
   }
 
   applyPercentageDiscount(percentage: number): Money {
-    if (percentage < 0 || percentage > 100) {
-      throw new Error('Discount percentage must be between 0 and 100');
+    if (percentage < 0 || percentage >= 100) {
+      throw new DomainValidationError(
+        'Discount percentage must be greater than or equal to 0 and lower than 100',
+      );
     }
-
-    const discountedValue = Math.round(
-      this.valueInCents * (1 - percentage / 100),
+    return Money.fromCents(
+      Math.round(this.valueInCents * (1 - percentage / 100)),
     );
-
-    return Money.fromCents(discountedValue);
   }
 }

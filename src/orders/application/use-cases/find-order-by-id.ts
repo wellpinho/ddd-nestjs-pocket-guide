@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OrderRepository } from '../ports/order-repository';
 import { Order } from '../../domain/order';
-import { OrderNotFoundError } from 'src/orders/domain/errors';
+import { OrderNotFoundError } from '../../domain/errors';
 
 @Injectable()
 export class FindOrderByIdUseCase {
