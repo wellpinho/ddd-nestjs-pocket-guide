@@ -4,10 +4,13 @@ Projeto prático que acompanha o e-book **DDD com NestJS — Guia de Bolso para 
 
 A proposta é mostrar a evolução de um módulo de pedidos saindo de um CRUD acoplado até uma arquitetura com **Domain-Driven Design, Ports & Adapters, Clean Code, testes, idempotência, eventos e Outbox**.
 
+Este repositório funciona como material complementar ao e-book: você pode consultar a implementação final, executar os testes e, se quiser, modificar o código para explorar outras decisões arquiteturais.
+
 > 📘 **Está acompanhando pelo e-book?**
 >
-> Faça um **Fork deste repositório antes de começar os exercícios**.
-> Assim você poderá alterar, quebrar e experimentar o código livremente sem modificar o projeto original.
+> Você pode clonar este repositório apenas para consultar e executar o projeto.
+>
+> Se quiser **modificar o código e manter suas próprias alterações no GitHub**, recomendamos fazer um **Fork**. Assim você terá sua própria cópia para experimentar livremente.
 >
 > Veja [Como usar este projeto](#como-usar-este-projeto).
 
@@ -110,23 +113,43 @@ Isso evita uma nova cobrança lógica ao repetir a mesma operação no provedor.
 
 # Como usar este projeto
 
-Este repositório foi criado para ser estudado, modificado e até quebrado.
+Existem duas formas simples de utilizar este repositório.
 
-A proposta não é apenas executar o código final.
+## Opção 1 — Apenas estudar e executar
 
-Queremos que você experimente as decisões arquiteturais apresentadas no e-book.
+Se você quer apenas acompanhar o código apresentado no e-book, executar a aplicação e rodar os testes, pode clonar este repositório diretamente:
 
-Para isso, **não trabalhe diretamente no repositório original**.
+```bash
+git clone https://github.com/wellpinho/ddd-nestjs-pocket-guide.git
+```
 
-Crie uma cópia na sua própria conta do GitHub utilizando um **Fork**.
+Entre na pasta:
 
-## 1. Faça o Fork
+```bash
+cd ddd-nestjs-pocket-guide
+```
 
-No topo desta página no GitHub, clique em:
+Instale as dependências:
+
+```bash
+npm install
+```
+
+Pronto.
+
+Você não precisa fazer Fork apenas para estudar ou executar o projeto localmente.
+
+---
+
+## Opção 2 — Quero modificar e experimentar
+
+Se você pretende alterar regras, testar outras implementações ou manter suas próprias modificações no GitHub, recomendamos criar um **Fork**.
+
+No topo da página do repositório, clique em:
 
 **Fork → Create fork**
 
-O GitHub criará uma cópia deste projeto na sua conta.
+O GitHub criará uma cópia na sua conta:
 
 ```text
 Repositório original
@@ -134,23 +157,15 @@ Repositório original
 github.com/wellpinho/ddd-nestjs-pocket-guide
 
                 ↓
-
                FORK
-
                 ↓
 
-Seu repositório
+Sua cópia
 
 github.com/SEU-USUARIO/ddd-nestjs-pocket-guide
 ```
 
-Agora você possui seu próprio ambiente para experimentar.
-
----
-
-## 2. Clone o SEU Fork
-
-Depois de criar o Fork, copie a URL do repositório que está na **sua conta**.
+Agora clone **o seu Fork**:
 
 ```bash
 git clone https://github.com/SEU-USUARIO/ddd-nestjs-pocket-guide.git
@@ -170,134 +185,86 @@ npm install
 
 ---
 
-## 3. Crie uma branch para seus experimentos
+## Crie uma branch para seus experimentos
 
-Mesmo dentro do seu Fork, recomendamos criar uma branch para os exercícios.
+Se pretende modificar o projeto, uma boa prática é criar uma branch própria:
 
 ```bash
 git checkout -b meus-experimentos
 ```
 
-Agora você pode:
+Agora você pode livremente:
 
-- alterar regras;
-- modificar Entities;
-- criar novos Use Cases;
-- experimentar outras arquiteturas;
-- quebrar testes;
-- corrigir os testes;
+- alterar regras de negócio;
+- modificar Entities e Value Objects;
+- testar outras implementações;
 - substituir adapters;
-- implementar novas regras de negócio.
+- experimentar outros gateways;
+- provocar falhas;
+- modificar os testes;
+- comparar diferentes soluções arquiteturais.
 
-Sem medo.
-
-Esse é justamente o objetivo do laboratório.
-
----
-
-## 4. Faça seus próprios commits
-
-Depois de realizar algum experimento:
+Se quiser salvar suas alterações:
 
 ```bash
 git add .
-```
-
-```bash
 git commit -m "experiment: minha implementação"
-```
-
-Se quiser manter suas alterações no GitHub:
-
-```bash
 git push -u origin meus-experimentos
 ```
 
-Esses commits serão enviados para **o seu Fork**.
+Esses commits serão enviados para **o seu Fork**, não para o repositório original.
 
-O repositório original continuará intacto.
-
-> Você não precisa abrir um Pull Request para concluir os exercícios do e-book.
+> Não é necessário abrir Pull Request.
 >
-> O Fork é seu ambiente pessoal de estudo e experimentação.
+> O Fork serve como seu próprio ambiente para explorar e modificar o projeto.
 
 ---
 
-## 5. Quer recomeçar?
+## Experimentos opcionais
 
-Algo quebrou?
+Você não precisa realizar os experimentos abaixo para acompanhar o e-book.
 
-Ótimo.
+Eles existem apenas para quem quiser explorar o comportamento da aplicação e verificar, na prática, quais regras estão protegidas pela arquitetura e pelos testes.
 
-Parte da proposta deste projeto é justamente permitir que isso aconteça.
+### 1. Quebre uma regra de desconto
 
-Você pode voltar para sua branch principal:
-
-```bash
-git checkout master
-```
-
-E criar outro experimento:
-
-```bash
-git checkout -b experimento-02
-```
-
-Você também pode comparar sua implementação com o código original.
-
-A pergunta mais importante durante os exercícios não é:
-
-> "Qual é a pasta correta?"
-
-É:
-
-> **"Por que essa responsabilidade deveria estar aqui?"**
-
----
-
-# Laboratório: quebre o código
-
-Depois que o projeto estiver funcionando, faça alguns experimentos.
-
-### Experimento 1 — Desconto
-
-Altere o desconto do cliente PREMIUM:
+Altere:
 
 ```text
 10% → 5%
 ```
 
-Execute os testes.
+Execute:
 
 ```bash
 npm test
 ```
 
-**Pergunta:** algum teste detectou a mudança?
+Observe quais testes detectam a alteração.
+
+A pergunta aqui é:
+
+> **Se uma regra importante mudar acidentalmente, algum teste fica vermelho?**
 
 ---
 
-### Experimento 2 — Regra de pagamento
+### 2. Permita uma transição inválida
 
-Permita propositalmente:
+Modifique temporariamente o domínio para permitir:
 
 ```text
 CANCELLED → PAID
 ```
 
-Execute novamente:
+Execute novamente os testes.
 
-```bash
-npm test
-```
-
-**Pergunta:** qual teste protege essa regra?
+Observe qual teste protege essa regra de negócio.
 
 ---
 
-### Experimento 3 — Gateway indisponível
+### 3. Simule uma falha no gateway
 
-Faça o `PaymentGateway` lançar:
+Faça o `PaymentGateway` lançar uma exceção:
 
 ```typescript
 throw new Error('Gateway unavailable');
@@ -305,64 +272,50 @@ throw new Error('Gateway unavailable');
 
 Observe o estado final do `Order`.
 
-Ele deveria terminar como:
-
-```text
-PENDING
-```
-
-ou:
-
-```text
-PAID
-```
-
-Por quê?
+Esse experimento ajuda a visualizar por que a ordem das operações importa.
 
 ---
 
-### Experimento 4 — Idempotência
+### 4. Remova a idempotência
 
-Remova a:
+Remova temporariamente:
 
 ```text
 idempotencyKey
 ```
 
-Imagine agora duas requisições iguais:
+Agora imagine duas chamadas:
 
 ```text
 PATCH /orders/123/pay
 PATCH /orders/123/pay
 ```
 
-**Pergunta:** qual problema poderia acontecer em um gateway real?
+Pergunte:
+
+> O que poderia acontecer em um gateway de pagamento real?
 
 ---
 
-### Experimento 5 — Outbox
+### 5. Faça o publisher falhar
 
-Faça o `EventPublisher` falhar propositalmente.
+Provoque uma falha no `EventPublisher`.
 
-Pergunte:
+Observe se a mensagem pendente desaparece ou continua disponível no Outbox.
 
-> O evento foi perdido?
-
-Observe o comportamento da mensagem pendente no Outbox.
+Isso ajuda a visualizar o problema que o padrão Outbox tenta resolver.
 
 ---
 
-### Experimento 6 — Presentation
+### 6. Remova o Presenter
 
-Retorne a `Order` diretamente pelo Controller, sem Presenter.
+Retorne a `Order` diretamente pelo Controller.
 
-Depois altere a estrutura interna da Entity.
+Depois altere algum detalhe interno da Entity.
 
-Pergunte:
+Observe o impacto sobre a resposta HTTP.
 
-> Meu contrato HTTP mudou sem que eu percebesse?
-
-Esse é um dos motivos para separar:
+A ideia é visualizar por que:
 
 ```text
 Domain Entity
@@ -371,6 +324,8 @@ Presenter
       ↓
 HTTP Response
 ```
+
+pode ser uma separação útil.
 
 ---
 
@@ -430,26 +385,26 @@ POST   /orders/outbox/process
 }
 ```
 
-Nesse exemplo, o subtotal é:
+Nesse exemplo:
 
 ```text
 2 × R$ 600,00 = R$ 1.200,00
 ```
 
-Como o cliente é `PREMIUM` e o valor ultrapassa R$ 1.000,00, a `PricingPolicy` aplica a regra de desconto definida no domínio.
+Como o cliente é `PREMIUM` e o subtotal ultrapassa R$ 1.000,00, a `PricingPolicy` aplica a regra de desconto definida no domínio.
 
 ---
 
 ## Sobre o Outbox deste projeto
 
-O projeto mantém o Outbox propositalmente simples e em memória.
+O Outbox deste projeto é propositalmente simples e utiliza armazenamento em memória.
 
-O objetivo é deixar visível a separação entre:
+Seu objetivo é tornar visível a separação entre:
 
 ```text
-OrderPaidEvent
+Fato do domínio
       ↓
-Domain Event
+OrderPaidEvent
       ↓
 Integration Event
       ↓
@@ -458,24 +413,22 @@ Outbox
 Event Publisher
 ```
 
-Em outras palavras:
+O fluxo demonstra quatro responsabilidades diferentes:
 
-1. acontece um fato no domínio: `OrderPaidEvent`;
-2. esse fato precisa ser comunicado externamente;
-3. criamos um contrato de integração: `orders.order-paid.v1`;
-4. a mensagem é registrada no Outbox;
-5. a infraestrutura tenta publicá-la;
-6. em caso de falha, ela pode permanecer pendente para nova tentativa.
+1. o domínio registra que algo aconteceu;
+2. esse fato é convertido em um contrato de integração;
+3. a mensagem fica pendente no Outbox;
+4. a infraestrutura realiza sua publicação.
 
-Em uma aplicação real:
+Em uma aplicação real, o:
 
 ```text
 InMemoryOutboxRepository
 ```
 
-provavelmente seria substituído por persistência transacional.
+seria normalmente substituído por persistência transacional.
 
-E:
+E o:
 
 ```text
 InMemoryEventPublisher
@@ -490,23 +443,25 @@ AWS SNS/SQS
 ou outro broker
 ```
 
-O domínio não precisa conhecer nenhuma dessas tecnologias.
+O ponto importante é que **o domínio não precisa conhecer nenhuma dessas tecnologias**.
 
 ---
 
-## Uma observação importante sobre arquitetura
+## Não copie esta arquitetura cegamente
 
-Este projeto possui:
+Este projeto demonstra:
 
-- DDD
-- Ports & Adapters
-- Domain Events
-- Integration Events
-- Outbox
-- Idempotência
-- Presenters
+```text
+DDD
+Ports & Adapters
+Domain Events
+Integration Events
+Outbox
+Idempotência
+Presenters
+```
 
-Isso **não significa que todo projeto precisa dessa estrutura**.
+Isso não significa que todo projeto precise dessa estrutura.
 
 Um CRUD simples pode funcionar perfeitamente com:
 
@@ -518,34 +473,34 @@ Service
 Repository
 ```
 
-Arquitetura tem custo.
+Arquitetura possui custo.
 
 Mais abstrações significam mais conceitos, arquivos, decisões e manutenção.
 
-Não utilize DDD porque:
+Portanto, não utilize DDD simplesmente porque:
 
 > "Essa é a arquitetura correta."
 
-Utilize quando os problemas do sistema justificarem essas decisões.
+Utilize ferramentas arquiteturais quando elas resolverem problemas reais do sistema.
 
 > **A melhor arquitetura não é a que possui mais padrões. É a que torna as decisões importantes mais fáceis de entender, modificar e proteger.**
 
 ---
 
-## Antes de terminar
+## Um mapa mental para levar com você
 
-Ao estudar cada parte do projeto, tente responder:
+Ao analisar uma responsabilidade, pergunte:
 
 ```text
-Isso é regra de negócio?
+É uma regra do negócio?
         ↓
 Domain
 
-Isso coordena uma ação?
+Coordena uma ação da aplicação?
         ↓
 Application
 
-Preciso de uma capacidade externa?
+Preciso abstrair uma capacidade?
         ↓
 Port
 
@@ -553,26 +508,28 @@ Quem executa essa capacidade?
         ↓
 Infrastructure
 
-Como isso chega ou sai do sistema?
+Como os dados entram ou saem?
         ↓
 Presentation
 
-Como provo que a regra continua funcionando?
+Como provo que continua funcionando?
         ↓
 Test
 ```
 
-Se você começar a fazer essas perguntas naturalmente durante um Code Review, este projeto já cumpriu boa parte do seu objetivo.
+Mais importante do que decorar uma estrutura de pastas é conseguir responder:
+
+> **Quem deveria ser responsável por isso?**
 
 ---
 
 ## E-book
 
-Este repositório acompanha o:
+Este projeto acompanha:
 
-### DDD com NestJS
+# DDD com NestJS
 
-**Guia de Bolso para Decisões Arquiteturais**
+### Guia de Bolso para Decisões Arquiteturais
 
 Um guia prático para situações como:
 
